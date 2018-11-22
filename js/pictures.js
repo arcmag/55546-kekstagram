@@ -5,19 +5,20 @@ for (var i = 1; i <= 25; i++) {
   urlPhotoNameList.push(i);
 }
 
+function getRandomInt(max, min) {
+  return Math.floor((Math.random()) * (max - min + 1) + min);
+}
+
 function getRandomPhotoUrl() {
   if (urlPhotoNameList.length >= 1) {
-    return 'photos/' + (urlPhotoNameList.splice(Math.round(Math.random() * (urlPhotoNameList.length - 1)), 1)[0]) + '.jpg';
+    return 'photos/' + urlPhotoNameList.splice(getRandomInt(urlPhotoNameList.length - 1, 0), 1)[0] + '.jpg';
   }
 
   return false;
 }
 
 function getRandomLikesNumber() {
-  var likesNumberMax = 200;
-  var likesNumberMin = 15;
-
-  return Math.floor((Math.random()) * (likesNumberMax - likesNumberMin + 1) + likesNumberMin);
+  return getRandomInt(200, 15);
 }
 
 function getRandomComments() {
@@ -30,16 +31,13 @@ function getRandomComments() {
     'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
   ];
   var commentList = [];
-  var commentListCountMax = 10;
-  var commentListCountMin = 3;
-  var commentListCount = Math.floor(Math.random() * (commentListCountMax - commentListCountMin + 1) + commentListCountMin);
 
-  for (var j = 0; j < commentListCount; j++) {
-    var commentsStringListCopy = commentsStringList.slice();
-    var sentence1 = commentsStringListCopy.splice(Math.round(Math.random() * (commentsStringListCopy.length - 1)), 1)[0];
-    var sentence2 = commentsStringListCopy.splice(Math.round(Math.random() * (commentsStringListCopy.length - 1)), 1)[0];
+  for (var j = 0; j < getRandomInt(10, 3); j++) {
+    var copyList = commentsStringList.slice();
+    var sentence1 = copyList.splice(getRandomInt(copyList.length - 1, 0), 1)[0];
+    var sentence2 = copyList.splice(getRandomInt(copyList.length - 1, 0), 1)[0];
 
-    commentList.push(Math.round(Math.random()) ? sentence1 : sentence1 + ' ' + sentence2);
+    commentList.push(getRandomInt(1, 0) ? sentence1 : sentence1 + ' ' + sentence2);
   }
 
   return commentList;
@@ -55,7 +53,7 @@ function getPhotoDescription() {
     'Вот это тачка!',
   ];
 
-  return descriptionsList[Math.round(Math.random() * (descriptionsList.length - 1))];
+  return descriptionsList[getRandomInt(descriptionsList.length - 1, 0)];
 }
 
 var photoContainer = document.createDocumentFragment();
@@ -72,9 +70,9 @@ for (var k = 0; k < 25; k++) {
 
   var photoNewTmp = photoTmp.cloneNode(true);
 
-  photoNewTmp.querySelector('.picture__img').src = photosList[i].url;
-  photoNewTmp.querySelector('.picture__likes').textContent = photosList[i].likes;
-  photoNewTmp.querySelector('.picture__comments').textContent = photosList[i].comments.length;
+  photoNewTmp.querySelector('.picture__img').src = photosList[k].url;
+  photoNewTmp.querySelector('.picture__likes').textContent = photosList[k].likes;
+  photoNewTmp.querySelector('.picture__comments').textContent = photosList[k].comments.length;
   photoContainer.appendChild(photoNewTmp);
 }
 
@@ -95,14 +93,14 @@ bigPicture.querySelector('.social__comment-count').classList.add('visually-hidde
 bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
 for (var t = 0; t < photosList[0].comments.length; t++) {
-  if (i >= 5) {
+  if (t >= 5) {
     break;
   }
 
   var commentTmp = bigPicture.querySelector('.social__comment').cloneNode(true);
 
-  commentTmp.querySelector('.social__picture').src = 'img/avatar-' + (Math.floor((Math.random()) * (6 - 1 + 1) + 1)) + '.svg';
-  commentTmp.querySelector('.social__text').textContent = photosList[0].comments[i];
+  commentTmp.querySelector('.social__picture').src = 'img/avatar-' + (getRandomInt(6, 1)) + '.svg';
+  commentTmp.querySelector('.social__text').textContent = photosList[0].comments[t];
 
   commentsTmpContainer.appendChild(commentTmp);
 }
