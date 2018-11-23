@@ -33,13 +33,17 @@ function getRandomInt(max, min) {
   return Math.floor((Math.random()) * (max - min + 1) + min);
 }
 
+function compare() {
+  return Math.random() - 0.5;
+}
+
 function getRandomArrayElement(array) {
   return array[getRandomInt(array.length - 1, 0)];
 }
 
 function getRandomPhotoUrl() {
   if (urlPhotoNameList.length >= 1) {
-    return urlPhotoNameList.splice(getRandomInt(urlPhotoNameList.length - 1, 0), 1)[0];
+    return urlPhotoNameList.sort(compare).pop();
   }
 
   return false;
@@ -49,11 +53,9 @@ function getRandomComments() {
   var commentList = [];
 
   for (var j = 0; j < getRandomInt(10, 3); j++) {
-    var copyList = COMMENTS_STRING_LIST.slice();
-    var sentence1 = copyList.splice(getRandomInt(copyList.length - 1, 0), 1)[0];
-    var sentence2 = copyList.splice(getRandomInt(copyList.length - 1, 0), 1)[0];
+    var copyList = COMMENTS_STRING_LIST.slice().sort(compare);
 
-    commentList.push(getRandomInt(1, 0) ? sentence1 : sentence1 + ' ' + sentence2);
+    commentList.push(getRandomInt(1, 0) ? copyList[0] : copyList[0] + ' ' + copyList[1]);
   }
 
   return commentList;
