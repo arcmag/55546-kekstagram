@@ -42,11 +42,7 @@ function getRandomArrayElement(array) {
 }
 
 function getRandomPhotoUrl() {
-  if (urlPhotoNameList.length >= 1) {
-    return urlPhotoNameList.sort(compare).pop();
-  }
-
-  return false;
+  return urlPhotoNameList.sort(compare).pop();
 }
 
 function getRandomComments() {
