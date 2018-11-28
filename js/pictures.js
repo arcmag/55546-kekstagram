@@ -29,7 +29,7 @@ var bigPicture = document.querySelector('.big-picture');
 var bigPictureCancel = document.querySelector('.big-picture__cancel');
 var uploadFile = document.querySelector('#upload-file');
 
-uploadFile.addEventListener("change", function () {
+uploadFile.addEventListener('change', function () {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
 });
 
@@ -48,13 +48,9 @@ document.addEventListener('keyup', function (e) {
     bigPicture.classList.add('hidden');
   }
 
-  if (elem == bigPictureCancel && e.keyCode === ENTER_KEYCODE) {
+  if (elem === bigPictureCancel && e.keyCode === ENTER_KEYCODE) {
     bigPicture.classList.add('hidden');
   }
-});
-
-document.querySelector('.effect-level__pin').addEventListener('mouseup', function () {
-  console.log(1);
 });
 
 document.querySelector('.pictures.container').addEventListener('click', function (e) {
