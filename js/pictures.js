@@ -19,13 +19,11 @@ var DESCRIPTION_LIST = [
 ];
 
 var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
 
 var photosList = [];
 
 var urlPhotoNameList = [];
 
-var containerPicture = document.querySelector('.pictures.container');
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
 
@@ -36,23 +34,11 @@ var imgUploadCancel = document.querySelector('.img-upload__cancel');
 function showBigPicture() {
   bigPicture.classList.remove('hidden');
   document.addEventListener('keyup', keydownHiddenBigPictureEsc);
-
-  document.removeEventListener('keyup', keydownShowBigPictureEnter);
 }
 
 function hiddenBigPicture() {
   bigPicture.classList.add('hidden');
-  document.addEventListener('keyup', keydownShowBigPictureEnter);
-
   document.removeEventListener('keyup', keydownHiddenBigPictureEsc);
-}
-
-function keydownShowBigPictureEnter(e) {
-  var elem = document.activeElement;
-  if (elem.classList.contains('picture') && e.keyCode === ENTER_KEYCODE) {
-    outputPhotoInfo(elem.querySelector('img').dataset['photoIndex']);
-    showBigPicture();
-  }
 }
 
 function keydownHiddenBigPictureEsc(e) {
@@ -71,20 +57,6 @@ imgUploadCancel.addEventListener('click', function () {
 });
 
 bigPictureCancel.addEventListener('click', hiddenBigPicture);
-
-document.addEventListener('keyup', keydownShowBigPictureEnter);
-
-containerPicture.addEventListener('click', function (e) {
-  var obj = e.target;
-
-  if (!obj.dataset['photoIndex']) {
-    return;
-  }
-
-  showBigPicture();
-  outputPhotoInfo(obj.dataset['photoIndex']);
-});
-
 
 var effects = document.querySelector('.effects');
 var wrapperImg = document.querySelector('.img-upload__preview');
@@ -144,13 +116,18 @@ function outputPhotoList() {
   var photoTmp = document.querySelector('#picture').content;
 
   for (var p = 0; p < photosList.length; p++) {
-    var photoNewTmp = photoTmp.cloneNode(true);
+    var photoNewTmp = photoTmp.querySelector('.picture').cloneNode(true);
 
-    photoNewTmp.querySelector('.picture img').setAttribute('data-photo-index', p);
+    photoNewTmp.setAttribute('data-photo-index', p);
 
     photoNewTmp.querySelector('.picture__img').src = photosList[p].url;
     photoNewTmp.querySelector('.picture__likes').textContent = photosList[p].likes;
     photoNewTmp.querySelector('.picture__comments').textContent = photosList[p].comments.length;
+
+    photoNewTmp.addEventListener('click', function () {
+      outputPhotoInfo(this.dataset['photoIndex']);
+      showBigPicture();
+    });
 
     photoContainer.appendChild(photoNewTmp);
   }
