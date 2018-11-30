@@ -31,6 +31,35 @@ var uploadFile = document.querySelector('#upload-file');
 var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
+var textHashtags = document.querySelector('.text__hashtags');
+
+textHashtags.addEventListener('invalid', function () {
+  var hashList = textHashtags.value.split(' ');
+  var hashListCopy = hashList.slice().map(function (elem) {
+    return elem.toLowerCase();
+  });
+
+  if (hashList.length >= 5) {
+    textHashtags.setCustomValidity('Максимум 5 hashtag');
+  }
+
+  for (var i = 0; i < hashList.length; i++) {
+    var hash = hashList[i];
+
+    if (hash[0] !== '#') {
+      textHashtags.setCustomValidity('hashtag должны начинаться с символа #');
+    } else if (textHashtags.validity.tooShort) {
+      textHashtags.setCustomValidity('hashtag должны быть символы кроме #');
+    } else if (textHashtags.validity.tooLong) {
+      textHashtags.setCustomValidity('Максимальная длинная hashtag 20 символов');
+    } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
+      textHashtags.setCustomValidity('Одинаковые hashtag недопустимы');
+    } else {
+      textHashtags.setCustomValidity('');
+    }
+  }
+});
+
 function showBigPicture() {
   bigPicture.classList.remove('hidden');
   document.addEventListener('keyup', keydownHiddenBigPictureEsc);
@@ -47,14 +76,26 @@ function keydownHiddenBigPictureEsc(e) {
   }
 }
 
-uploadFile.addEventListener('change', function () {
+function showEditPictureBlock() {
   imgUploadOverlay.classList.remove('hidden');
-});
+  document.addEventListener('keyup', keydownHiddenEditPictureBlock);
+}
 
-imgUploadCancel.addEventListener('click', function () {
+function hiddenEditPictureBlock() {
   imgUploadOverlay.classList.add('hidden');
   uploadFile.value = '';
-});
+
+  document.removeEventListener('keyup', keydownHiddenEditPictureBlock);
+}
+
+function keydownHiddenEditPictureBlock(e) {
+  if (document.activeElement !== textHashtags && e.keyCode === ESC_KEYCODE) {
+    hiddenEditPictureBlock();
+  }
+}
+
+uploadFile.addEventListener('change', showEditPictureBlock);
+imgUploadCancel.addEventListener('click', hiddenEditPictureBlock);
 
 bigPictureCancel.addEventListener('click', hiddenBigPicture);
 
