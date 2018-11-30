@@ -69,11 +69,11 @@ function keydownHiddenBigPictureEsc(e) {
   }
 }
 
-uploadFile.addEventListener('change', function() {
+uploadFile.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
 });
 
-imgUploadCancel.addEventListener('click', function() {
+imgUploadCancel.addEventListener('click', function () {
   imgUploadOverlay.classList.add('hidden');
   uploadFile.value = '';
 });
@@ -87,11 +87,9 @@ containerPicture.addEventListener('click', function (e) {
 
   if (obj.classList.contains('picture__comments') || obj.classList.contains('picture__likes')) {
     obj = obj.parentElement.parentElement.querySelector('.picture__img');
-  }
-  else if (obj.classList.contains('picture__info')) {
+  } else if (obj.classList.contains('picture__info')) {
     obj = obj.parentElement.querySelector('.picture__img');
-  }
-  else if (!obj.classList.contains('picture__img')) {
+  } else if (!obj.classList.contains('picture__img')) {
     return;
   }
 
@@ -104,7 +102,7 @@ var effects = document.querySelector('.effects');
 var wrapperImg = document.querySelector('.img-upload__preview');
 effects.addEventListener('change', function (e) {
   wrapperImg.className = 'img-upload__preview effects__preview--' + e.target.value;
-})
+});
 
 function createPhotoList() {
   for (var i = 1; i <= 25; i++) {
