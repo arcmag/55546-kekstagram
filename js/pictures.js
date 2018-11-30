@@ -85,11 +85,7 @@ document.addEventListener('keyup', keydownShowBigPictureEnter);
 containerPicture.addEventListener('click', function (e) {
   var obj = e.target;
 
-  if (obj.classList.contains('picture__comments') || obj.classList.contains('picture__likes')) {
-    obj = obj.parentElement.parentElement.querySelector('.picture__img');
-  } else if (obj.classList.contains('picture__info')) {
-    obj = obj.parentElement.querySelector('.picture__img');
-  } else if (!obj.classList.contains('picture__img')) {
+  if (!obj.dataset['photoIndex']) {
     return;
   }
 
