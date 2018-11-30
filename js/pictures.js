@@ -35,7 +35,6 @@ var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
 function showBigPicture() {
   bigPicture.classList.remove('hidden');
-  document.addEventListener('keyup', keydownHiddenBigPictureEnter);
   document.addEventListener('keyup', keydownHiddenBigPictureEsc);
 
   document.removeEventListener('keyup', keydownShowBigPictureEnter);
@@ -45,7 +44,6 @@ function hiddenBigPicture() {
   bigPicture.classList.add('hidden');
   document.addEventListener('keyup', keydownShowBigPictureEnter);
 
-  document.removeEventListener('keyup', keydownHiddenBigPictureEnter);
   document.removeEventListener('keyup', keydownHiddenBigPictureEsc);
 }
 
@@ -57,14 +55,8 @@ function keydownShowBigPictureEnter(e) {
   }
 }
 
-function keydownHiddenBigPictureEnter(e) {
-  if (document.activeElement === bigPictureCancel && e.keyCode === ENTER_KEYCODE) {
-    hiddenBigPicture();
-  }
-}
-
 function keydownHiddenBigPictureEsc(e) {
-  if (!bigPicture.classList.contains('hidden') && e.keyCode === ESC_KEYCODE) {
+  if (e.keyCode === ESC_KEYCODE) {
     hiddenBigPicture();
   }
 }
