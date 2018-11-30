@@ -124,8 +124,8 @@ function outputPhotoList() {
     photoNewTmp.querySelector('.picture__likes').textContent = photosList[p].likes;
     photoNewTmp.querySelector('.picture__comments').textContent = photosList[p].comments.length;
 
-    photoNewTmp.addEventListener('click', function () {
-      outputPhotoInfo(this.dataset['photoIndex']);
+    photoNewTmp.addEventListener('click', function (e) {
+      outputPhotoInfo(e.currentTarget.dataset['photoIndex']);
       showBigPicture();
     });
 
