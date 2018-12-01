@@ -48,9 +48,9 @@ textHashtags.addEventListener('invalid', function () {
 
     if (hash[0] !== '#') {
       textHashtags.setCustomValidity('hashtag должны начинаться с символа #');
-    } else if (textHashtags.validity.tooShort) {
+    } else if (hash.length === 1) {
       textHashtags.setCustomValidity('hashtag должны быть символы кроме #');
-    } else if (textHashtags.validity.tooLong) {
+    } else if (hash.length > 20) {
       textHashtags.setCustomValidity('Максимальная длинная hashtag 20 символов');
     } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
       textHashtags.setCustomValidity('Одинаковые hashtag недопустимы');
