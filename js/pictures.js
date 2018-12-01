@@ -34,7 +34,7 @@ var imgUploadCancel = document.querySelector('.img-upload__cancel');
 var uploadSubmit = document.querySelector('#upload-submit');
 var textHashtags = document.querySelector('.text__hashtags');
 
-uploadSubmit.addEventListener('click', function (e) {
+uploadSubmit.addEventListener('click', function () {
   var hashList = textHashtags.value.split(' ');
   var hashListCopy = hashList.slice().map(function (elem) {
     return elem.toLowerCase();
@@ -42,13 +42,12 @@ uploadSubmit.addEventListener('click', function (e) {
 
   if (hashList.length > 5) {
     textHashtags.setCustomValidity('Максимум 5 hashtag');
-    e.preventDefault();
     return;
   }
 
+  var textError = '';
   for (var i = 0; i < hashList.length; i++) {
     var hash = hashList[i];
-    var textError = '';
 
     if (hash[0] !== '#') {
       textError = 'hashtag должны начинаться с символа #';
@@ -60,13 +59,12 @@ uploadSubmit.addEventListener('click', function (e) {
       textError = 'Одинаковые hashtag недопустимы';
     }
 
-    textHashtags.setCustomValidity(textError);
     if (textError) {
-      e.preventDefault();
-      return;
+      break;
     }
   }
 
+  textHashtags.setCustomValidity(textError);
 });
 
 function showBigPicture() {
