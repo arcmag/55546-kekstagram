@@ -31,33 +31,42 @@ var uploadFile = document.querySelector('#upload-file');
 var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
+var uploadSubmit = document.querySelector('#upload-submit');
 var textHashtags = document.querySelector('.text__hashtags');
 
-textHashtags.addEventListener('invalid', function () {
+uploadSubmit.addEventListener('click', function (e) {
   var hashList = textHashtags.value.split(' ');
   var hashListCopy = hashList.slice().map(function (elem) {
     return elem.toLowerCase();
   });
 
-  if (hashList.length >= 5) {
+  if (hashList.length > 5) {
     textHashtags.setCustomValidity('Максимум 5 hashtag');
+    e.preventDefault();
+    return false;
   }
 
   for (var i = 0; i < hashList.length; i++) {
     var hash = hashList[i];
+    var textError = '';
 
     if (hash[0] !== '#') {
-      textHashtags.setCustomValidity('hashtag должны начинаться с символа #');
+      textError = 'hashtag должны начинаться с символа #';
     } else if (hash.length === 1) {
-      textHashtags.setCustomValidity('hashtag должны быть символы кроме #');
+      textError = 'hashtag должны быть символы кроме #';
     } else if (hash.length > 20) {
-      textHashtags.setCustomValidity('Максимальная длинная hashtag 20 символов');
+      textError = 'Максимальная длинная hashtag 20 символов';
     } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
-      textHashtags.setCustomValidity('Одинаковые hashtag недопустимы');
-    } else {
-      textHashtags.setCustomValidity('');
+      textError = 'Одинаковые hashtag недопустимы';
+    }
+
+    textHashtags.setCustomValidity(textError);
+    if (textError) {
+      e.preventDefault();
+      return false;
     }
   }
+
 });
 
 function showBigPicture() {
