@@ -43,7 +43,7 @@ uploadSubmit.addEventListener('click', function (e) {
   if (hashList.length > 5) {
     textHashtags.setCustomValidity('Максимум 5 hashtag');
     e.preventDefault();
-    return false;
+    return;
   }
 
   for (var i = 0; i < hashList.length; i++) {
@@ -63,7 +63,7 @@ uploadSubmit.addEventListener('click', function (e) {
     textHashtags.setCustomValidity(textError);
     if (textError) {
       e.preventDefault();
-      return false;
+      return;
     }
   }
 
