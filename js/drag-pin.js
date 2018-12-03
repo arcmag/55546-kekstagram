@@ -28,7 +28,7 @@
     effectLevelDepth.style.width = ratePos + '%';
 
     setFilterQuality(ratePos);
-  }
+  };
 
   var mouseUp = function () {
     document.removeEventListener('mousemove', setPinPosition);
