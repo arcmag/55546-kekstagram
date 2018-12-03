@@ -107,8 +107,9 @@ imgUploadCancel.addEventListener('click', hiddenEditPictureBlock);
 bigPictureCancel.addEventListener('click', hiddenBigPicture);
 
 var effects = document.querySelector('.effects');
-var wrapperImg = document.querySelector('.img-upload__preview');
+var wrapperImg = window.main.imgUploadPreview;
 effects.addEventListener('change', function (e) {
+  wrapperImg.setAttribute('data-filter-effect', e.target.value);
   wrapperImg.className = 'img-upload__preview effects__preview--' + e.target.value;
 });
 
