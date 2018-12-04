@@ -82,12 +82,9 @@
 
     wrapperImg.setAttribute('data-filter-effect', currentFilter);
     wrapperImg.className = 'img-upload__preview effects__preview--' + currentFilter;
-    setPinPosition(false, 0);
 
-    if (currentFilter === 'none') {
-      sliderPin.classList.add('hidden');
-    } else {
-      sliderPin.classList.remove('hidden');
-    }
+    sliderPin.classList[currentFilter === 'none' ? 'add' : 'remove']('hidden');
+
+    setPinPosition(false, wrapperPin.getBoundingClientRect().width);
   });
 }());
