@@ -1,8 +1,34 @@
 'use strict';
 
 (function () {
-  var uploadSubmit = document.querySelector('#upload-submit');
+  // контроль над окном редактирования фотографии
+  var uploadFile = document.querySelector('#upload-file');
+  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+  var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
+  function showEditPictureBlock() {
+    imgUploadOverlay.classList.remove('hidden');
+    document.addEventListener('keyup', keydownHiddenEditPictureBlock);
+  }
+
+  function hiddenEditPictureBlock() {
+    imgUploadOverlay.classList.add('hidden');
+    uploadFile.value = '';
+
+    document.removeEventListener('keyup', keydownHiddenEditPictureBlock);
+  }
+
+  function keydownHiddenEditPictureBlock(e) {
+    if (document.activeElement !== window.main.textHashtags && e.keyCode === window.main.ESC_KEYCODE) {
+      hiddenEditPictureBlock();
+    }
+  }
+
+  uploadFile.addEventListener('change', showEditPictureBlock);
+  imgUploadCancel.addEventListener('click', hiddenEditPictureBlock);
+
+  // Валидация данных хештега
+  var uploadSubmit = document.querySelector('#upload-submit');
   uploadSubmit.addEventListener('click', function () {
     var hashList = window.main.textHashtags.value.split(' ');
     var hashListCopy = hashList.slice().map(function (elem) {

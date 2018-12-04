@@ -1,9 +1,7 @@
 'use strict';
 
 (function () {
-  var bigPicture = document.querySelector('.big-picture');
-  var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
-
+  // Генерация и вывод списка всех фоторафий
   function outputPhotoList() {
     var photoContainer = document.createDocumentFragment();
     var photoTmp = document.querySelector('#picture').content;
@@ -30,6 +28,9 @@
   }
   outputPhotoList();
 
+  var bigPicture = document.querySelector('.big-picture');
+  var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+  // Вывод подробной информации о конкретной фотографии
   function outputPhotoInfo(photoIndex) {
     var commentsContainer = document.querySelector('.social__comments');
     var commentsTmpContainer = document.createDocumentFragment();
