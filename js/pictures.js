@@ -106,12 +106,6 @@ imgUploadCancel.addEventListener('click', hiddenEditPictureBlock);
 
 bigPictureCancel.addEventListener('click', hiddenBigPicture);
 
-var effects = document.querySelector('.effects');
-var wrapperImg = document.querySelector('.img-upload__preview');
-effects.addEventListener('change', function (e) {
-  wrapperImg.className = 'img-upload__preview effects__preview--' + e.target.value;
-});
-
 function createPhotoList() {
   for (var i = 1; i <= 25; i++) {
     urlPhotoNameList.push('photos/' + i + '.jpg');
