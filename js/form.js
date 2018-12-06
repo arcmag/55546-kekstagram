@@ -34,20 +34,18 @@
   imgUploadCancel.addEventListener('click', hiddenEditPictureBlock);
 
   function onLoad() {
-    window.main.createMessageElement('Ошибка: не удалось записать данные на сервер.');
+    window.main.createMessage('Данные успешно загружены на сервер.', 'success');
   }
 
   function onError() {
-    window.main.createMessageElement('Ошибка: не удалось записать данные на сервер.', 'error');
+    window.main.createMessage('Ошибка: не удалось записать данные на сервер.', 'error');
   }
   // Получаем JSON данные фотографий с свервера
 
   // Валидация данных хештега
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadSubmit = document.querySelector('#upload-submit');
-  uploadSubmit.addEventListener('click', function (e) {
-    // e.preventDefault();
-
+  uploadSubmit.addEventListener('click', function () {
     var hashList = textHashtags.value.split(' ');
     var hashListCopy = hashList.slice().map(function (elem) {
       return elem.toLowerCase();
@@ -62,7 +60,7 @@
     for (var i = 0; i < hashList.length; i++) {
       var hash = hashList[i];
 
-      if(!hash && hashList.length === 1) {
+      if (!hash && hashList.length === 1) {
         break;
       }
 
@@ -81,7 +79,7 @@
       }
     }
 
-    if(textError) {
+    if (textError) {
       textHashtags.setCustomValidity(textError);
       textHashtags.style.border = 'solid 2px red';
     } else {
