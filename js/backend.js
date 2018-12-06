@@ -12,6 +12,11 @@
       onLoad(xhr.response);
     });
     xhr.addEventListener('error', onError);
+    xhr.addEventListener('readystatechange', function () {
+      if (xhr.status !== 0 && xhr.status !== 200) {
+        onError();
+      }
+    });
     xhr.open('GET', URL + '/data');
 
     xhr.send();
@@ -22,6 +27,11 @@
 
     xhr.addEventListener('load', onLoad);
     xhr.addEventListener('error', onError);
+    xhr.addEventListener('readystatechange', function () {
+      if (xhr.status !== 0 && xhr.status !== 200) {
+        onError();
+      }
+    });
 
     xhr.open('POST', URL);
 
