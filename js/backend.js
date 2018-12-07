@@ -9,32 +9,32 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      onLoad(xhr.response);
-    });
-    xhr.addEventListener('error', onError);
-    xhr.addEventListener('readystatechange', function () {
-      if (xhr.status !== 0 && xhr.status !== 200) {
+      console.log(xhr.status);
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
         onError();
       }
     });
-    xhr.open('GET', URL + '/data');
+    xhr.addEventListener('error', onError);
 
+    xhr.open('GET', URL + '/data');
     xhr.send();
   }
 
   function save(data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
 
-    xhr.addEventListener('load', onLoad);
-    xhr.addEventListener('error', onError);
-    xhr.addEventListener('readystatechange', function () {
-      if (xhr.status !== 0 && xhr.status !== 200) {
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad();
+      } else {
         onError();
       }
     });
+    xhr.addEventListener('error', onError);
 
     xhr.open('POST', URL);
-
     xhr.send(data);
   }
 
