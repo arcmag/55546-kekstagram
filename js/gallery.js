@@ -2,13 +2,16 @@
 
 (function () {
   // Генерация и вывод списка всех фоторафий
-  function outputPhotoList() {
+
+  var photosList = [];
+
+  function outputPhotoList(photos) {
     var photoContainer = document.createDocumentFragment();
     var photoTmp = document.querySelector('#picture').content;
 
-    for (var p = 0; p < window.main.photosList.length; p++) {
+    for (var p = 0; p < photos.length; p++) {
       var photoNewTmp = photoTmp.querySelector('.picture').cloneNode(true);
-      var photoData = window.main.photosList[p];
+      var photoData = photos[p];
 
       photoNewTmp.setAttribute('data-photo-index', p);
 
@@ -26,7 +29,6 @@
 
     document.querySelector('.pictures').appendChild(photoContainer);
   }
-  outputPhotoList();
 
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
@@ -34,7 +36,7 @@
   function outputPhotoInfo(photoIndex) {
     var commentsContainer = document.querySelector('.social__comments');
     var commentsTmpContainer = document.createDocumentFragment();
-    var photo = window.main.photosList[photoIndex];
+    var photo = photosList[photoIndex];
 
     bigPicture.querySelector('.big-picture__img img').src = photo.url;
     bigPicture.querySelector('.likes-count').textContent = photo.likes;
@@ -44,11 +46,12 @@
     bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
     bigPicture.querySelector('.comments-loader').classList.add('visually-hidden');
 
-    for (var t = 0; t < Math.min(photo.comments.length, 5); t++) {
+    for (var i = 0; i < Math.min(photo.comments.length, 5); i++) {
       var commentTmp = bigPicture.querySelector('.social__comment').cloneNode(true);
+      var comment = photo.comments[i];
 
-      commentTmp.querySelector('.social__picture').src = 'img/avatar-' + window.main.getRandomInt(6, 1) + '.svg';
-      commentTmp.querySelector('.social__text').textContent = photo.comments[t];
+      commentTmp.querySelector('.social__picture').src = comment.avatar;
+      commentTmp.querySelector('.social__text').textContent = comment.message;
 
       commentsTmpContainer.appendChild(commentTmp);
     }
@@ -74,4 +77,15 @@
   }
 
   bigPictureCancel.addEventListener('click', hiddenBigPicture);
+
+  function onLoad(data) {
+    outputPhotoList(photosList = data);
+  }
+
+  function onError() {
+    window.main.createMessage('Ошибка: не удалось получить данные с сервера.', 'error');
+  }
+  // Получаем JSON данные фотографий с свервера
+  window.backend.load(onLoad, onError);
+
 }());

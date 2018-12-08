@@ -1,6 +1,33 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
+
+  function createMessage(messageText, status) {
+    var tmp = document.querySelector('#' + status);
+    var messageBlock = tmp.content.querySelector('.' + status).cloneNode(true);
+    var messageBlockTitle = messageBlock.querySelector('.' + status + '__title');
+    var messageBlockButton = messageBlock.querySelector('.' + status + '__button');
+
+    messageBlockTitle.textContent = messageText;
+    document.querySelector('main').appendChild(messageBlock);
+
+    function destroyBlock(e) {
+      var elem = e.target;
+      if (elem.classList.contains('success') || elem.classList.contains(status + '__button') || e.keyCode === ESC_KEYCODE) {
+        messageBlockButton.removeEventListener('click', destroyBlock);
+        document.removeEventListener('click', destroyBlock);
+        document.removeEventListener('keyup', destroyBlock);
+
+        messageBlock.parentElement.removeChild(messageBlock);
+      }
+    }
+
+    messageBlockButton.addEventListener('click', destroyBlock);
+    document.addEventListener('click', destroyBlock);
+    document.addEventListener('keyup', destroyBlock);
+  }
+
   function getRandomInt(max, min) {
     return Math.floor((Math.random()) * (max - min + 1) + min);
   }
@@ -10,12 +37,11 @@
   }
 
   window.main = {
-    ESC_KEYCODE: 27,
+    ESC_KEYCODE: ESC_KEYCODE,
     imgUploadPreview: document.querySelector('.img-upload__preview'),
-    textHashtags: document.querySelector('.text__hashtags'),
+    createMessage: createMessage,
     getRandomInt: getRandomInt,
     compare: compare,
-    photosList: [],
     urlPhotoNameList: []
   };
 
