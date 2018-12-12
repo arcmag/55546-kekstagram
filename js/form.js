@@ -41,13 +41,10 @@
     imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
   }
 
-  setScalePhoto();
-
-
-
-
   function showEditPictureBlock() {
     scaleImage = 100;
+    setScalePhoto();
+
     imgUploadOverlay.classList.remove('hidden');
     document.addEventListener('keyup', keydownHiddenEditPictureBlock);
   }
