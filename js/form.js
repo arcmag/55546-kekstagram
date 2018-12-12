@@ -10,6 +10,7 @@
   var imgUploadCancel = document.querySelector('#upload-cancel');
 
   var textHashtags = document.querySelector('.text__hashtags');
+  var commentField = document.querySelector('.text__description');
 
   var scaleControlValue = document.querySelector('.scale__control--value');
   var btnScaleInc = document.querySelector('.scale__control--bigger');
@@ -56,12 +57,13 @@
     textHashtags.value = '';
 
     textHashtags.style.borderColor = '';
+    commentField.style.borderColor = '';
 
     document.removeEventListener('keyup', keydownHiddenEditPictureBlock);
   }
 
   function keydownHiddenEditPictureBlock(e) {
-    if (document.activeElement !== textHashtags && e.keyCode === window.main.ESC_KEYCODE) {
+    if (document.activeElement !== textHashtags && document.activeElement !== commentField && e.keyCode === window.main.ESC_KEYCODE) {
       hiddenEditPictureBlock();
     }
   }
@@ -92,7 +94,7 @@
       return;
     }
 
-    var textError = '';
+    var textErrorHash = '';
     for (var i = 0; i < hashList.length; i++) {
       var hash = hashList[i];
 
@@ -101,22 +103,30 @@
       }
 
       if (hash[0] !== '#') {
-        textError = 'hashtag должны начинаться с символа #';
+        textErrorHash = 'hashtag должны начинаться с символа #';
       } else if (hash.length === 1) {
-        textError = 'hashtag должны быть символы кроме #';
+        textErrorHash = 'hashtag должны быть символы кроме #';
       } else if (hash.length > 20) {
-        textError = 'Максимальная длинная hashtag 20 символов';
+        textErrorHash = 'Максимальная длинная hashtag 20 символов';
       } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
-        textError = 'Одинаковые hashtag недопустимы';
+        textErrorHash = 'Одинаковые hashtag недопустимы';
       }
 
-      if (textError) {
+      if (textErrorHash) {
         break;
       }
     }
 
-    if (textError) {
-      textHashtags.setCustomValidity(textError);
+    var textErrorComment = '';
+    if (commentField.value.length > 140) {
+      textErrorComment = 'Длина комментария не может составлять больше 140 символов';
+    }
+
+    if (textErrorComment) {
+      commentField.setCustomValidity(textErrorComment);
+      commentField.style.border = 'solid 2px red';
+    } else if (textErrorHash) {
+      textHashtags.setCustomValidity(textErrorHash);
       textHashtags.style.border = 'solid 2px red';
     } else {
       window.backend.save(new FormData(uploadSelectImage), onLoad, onError);
