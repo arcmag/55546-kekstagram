@@ -2,13 +2,52 @@
 
 (function () {
   // контроль над окном редактирования фотографии
+
+  var imgUploadPreview = document.querySelector('.img-upload__preview');
+
   var uploadFile = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var imgUploadCancel = document.querySelector('#upload-cancel');
 
   var textHashtags = document.querySelector('.text__hashtags');
 
+  var scaleControlValue = document.querySelector('.scale__control--value');
+  var btnScaleInc = document.querySelector('.scale__control--bigger');
+  var btnScaleDec = document.querySelector('.scale__control--smaller');
+  var scaleImage = 100;
+
+  btnScaleInc.addEventListener('click', setScalePhoto);
+  btnScaleDec.addEventListener('click', setScalePhoto);
+
+  function setScalePhoto(e) {
+    var elem = e ? e.currentTarget : -1;
+    var offsetSteep = 25;
+
+    if (elem !== -1) {
+      if (elem.classList.contains('scale__control--smaller')) {
+        scaleImage -= offsetSteep;
+      } else if (elem.classList.contains('scale__control--bigger')) {
+        scaleImage += offsetSteep;
+      }
+    }
+
+    if (scaleImage > 100) {
+      scaleImage = 100;
+    } else if (scaleImage < 25) {
+      scaleImage = 25;
+    }
+
+    scaleControlValue.value = scaleImage + '%';
+    imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
+  }
+
+  setScalePhoto();
+
+
+
+
   function showEditPictureBlock() {
+    scaleImage = 100;
     imgUploadOverlay.classList.remove('hidden');
     document.addEventListener('keyup', keydownHiddenEditPictureBlock);
   }

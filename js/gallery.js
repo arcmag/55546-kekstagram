@@ -88,6 +88,7 @@
     }, DEBOUNCE_INTERVAL);
   }
 
+  // Вывод подробной информации о конкретной фотографии
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
   var commentsLoader = bigPicture.querySelector('.comments-loader');
@@ -109,7 +110,6 @@
     commentsContainer.appendChild(comments);
   });
 
-  // Вывод подробной информации о конкретной фотографии
   function outputPhotoInfo(photoIndex) {
     var photo = currentPhoto = selectedPhotosList[photoIndex];
 
@@ -153,6 +153,7 @@
   function hiddenBigPicture() {
     bigPicture.classList.add('hidden');
     document.removeEventListener('keyup', keydownHiddenBigPictureEsc);
+
     currentPhoto = null;
     showComments = 5;
   }
