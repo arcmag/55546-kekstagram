@@ -45,29 +45,14 @@
       filterValue1 = 1;
     }
 
-    var filterString = '';
-    switch (imgUploadPreview.dataset['filterEffect']) {
-      case 'chrome':
-        filterString = 'grayscale(' + filterValue1 + ')';
-        break;
-      case 'sepia':
-        filterString = 'sepia(' + filterValue1 + ')';
-        break;
-      case 'marvin':
-        filterString = 'invert(' + value + '%)';
-        break;
-      case 'phobos':
-        filterString = 'blur(' + ((value * 3) / 100) + 'px)';
-        break;
-      case 'heat':
-        filterString = 'brightness(' + (1 + ((value * 2) / 100)) + ')';
-        break;
-      default:
-        filterString = '';
-        break;
-    }
+    imgUploadPreview.style.filter = ({
+      chrome: 'grayscale(' + filterValue1 + ')',
+      sepia: 'sepia(' + filterValue1 + ')',
+      marvin: 'invert(' + value + '%)',
+      phobos: 'blur(' + ((value * 3) / 100) + 'px)',
+      heat: 'brightness(' + (1 + ((value * 2) / 100)) + ')'
+    })[imgUploadPreview.dataset['filterEffect']] || '';
 
-    imgUploadPreview.style.filter = filterString;
   };
 
   pin.addEventListener('mousedown', function () {
