@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  // Генерация и вывод списка всех фоторафий
+  var DEBOUNCE_INTERVAL = 500;
 
   var photosList = [];
   var selectedPhotosList = [];
@@ -29,11 +29,11 @@
     var photoContainer = document.createDocumentFragment();
     var photoTmp = document.querySelector('#picture').content;
 
-    for (var p = 0; p < photos.length; p++) {
+    for (var i = 0; i < photos.length; i++) {
       var photoNewTmp = photoTmp.querySelector('.picture').cloneNode(true);
-      var photoData = photos[p];
+      var photoData = photos[i];
 
-      photoNewTmp.setAttribute('data-photo-index', p);
+      photoNewTmp.dataset.photoIndex = i;
 
       photoNewTmp.querySelector('.picture__img').src = photoData.url;
       photoNewTmp.querySelector('.picture__likes').textContent = photoData.likes;
@@ -61,9 +61,8 @@
   }
 
   var timer = null;
-  var DEBOUNCE_INTERVAL = 500; // ms
-  function setCurrentCategoryPhoto(e) {
-    var elem = e.currentTarget;
+  function setCurrentCategoryPhoto(evt) {
+    var elem = evt.currentTarget;
     var selectedFilter = elem.id;
 
     imgFiltersForm.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
@@ -83,8 +82,9 @@
       window.clearTimeout(timer);
     }
     timer = window.setTimeout(function () {
+      selectedPhotosList = filteredPhotoList
       removePhotoList();
-      outputPhotoList(selectedPhotosList = filteredPhotoList);
+      outputPhotoList(selectedPhotosList);
     }, DEBOUNCE_INTERVAL);
   }
 
@@ -158,8 +158,8 @@
     showComments = 5;
   }
 
-  function keydownHiddenBigPictureEsc(e) {
-    if (e.keyCode === window.main.ESC_KEYCODE) {
+  function keydownHiddenBigPictureEsc(evt) {
+    if (evt.keyCode === window.main.ESC_KEYCODE) {
       hiddenBigPicture();
     }
   }
@@ -167,14 +167,15 @@
   bigPictureCancel.addEventListener('click', hiddenBigPicture);
 
   function onLoad(data) {
-    outputPhotoList(photosList = selectedPhotosList = data);
+    photosList = selectedPhotosList = data;
+    outputPhotoList(photosList);
     imgFilters.classList.remove('img-filters--inactive');
   }
 
   function onError() {
     window.main.createMessage('Ошибка: не удалось получить данные с сервера.', 'error');
   }
+
   // Получаем JSON данные фотографий с свервера
   window.backend.load(onLoad, onError);
-
 }());

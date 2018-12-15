@@ -2,8 +2,10 @@
 
 (function () {
   // контроль над окном редактирования фотографии
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var imgUploadPreview = document.querySelector('.img-upload__preview');
+  var editImg = imgUploadPreview.querySelector('img');
 
   var uploadFile = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -43,6 +45,23 @@
   }
 
   function showEditPictureBlock() {
+    var file = uploadFile.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        editImg.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
+
     scaleImage = 100;
     setScalePhoto();
 
@@ -62,8 +81,8 @@
     document.removeEventListener('keyup', keydownHiddenEditPictureBlock);
   }
 
-  function keydownHiddenEditPictureBlock(e) {
-    if (document.activeElement !== textHashtags && document.activeElement !== commentField && e.keyCode === window.main.ESC_KEYCODE) {
+  function keydownHiddenEditPictureBlock(evt) {
+    if (document.activeElement !== textHashtags && document.activeElement !== commentField && evt.keyCode === window.main.ESC_KEYCODE) {
       hiddenEditPictureBlock();
     }
   }

@@ -12,9 +12,9 @@
     messageBlockTitle.textContent = messageText;
     document.querySelector('main').appendChild(messageBlock);
 
-    function destroyBlock(e) {
-      var elem = e.target;
-      if (elem.classList.contains('success') || elem.classList.contains(status + '__button') || e.keyCode === ESC_KEYCODE) {
+    function destroyBlock(evt) {
+      var elem = evt.target;
+      if (elem.classList.contains('success') || elem.classList.contains(status + '__button') || evt.keyCode === ESC_KEYCODE) {
         messageBlockButton.removeEventListener('click', destroyBlock);
         document.removeEventListener('click', destroyBlock);
         document.removeEventListener('keyup', destroyBlock);

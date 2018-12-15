@@ -12,9 +12,9 @@
   var effects = document.querySelector('.effects');
   var wrapperImg = window.main.imgUploadPreview;
 
-  var setPinPosition = function (e, value) {
+  function setPinPosition(evt, value) {
     dataSizeWrapperPin = wrapperPin.getBoundingClientRect();
-    var pinPos = typeof value === 'number' ? value : e.clientX - dataSizeWrapperPin.left;
+    var pinPos = typeof value === 'number' ? value : evt.clientX - dataSizeWrapperPin.left;
 
     if (pinPos <= 0) {
       pinPos = 0;
@@ -30,12 +30,12 @@
     setFilterQuality(ratePos);
   };
 
-  var mouseUp = function () {
+  function mouseUp() {
     document.removeEventListener('mousemove', setPinPosition);
     document.removeEventListener('mouseup', mouseUp);
   };
 
-  var setFilterQuality = function (value) {
+  function setFilterQuality(value) {
     var filterValue1 = '';
     if (value < 10) {
       filterValue1 = '0.0' + value;
@@ -65,7 +65,7 @@
   effects.addEventListener('change', function (e) {
     var currentFilter = e.target.value;
 
-    wrapperImg.setAttribute('data-filter-effect', currentFilter);
+    wrapperImg.dataset.filterEffect = currentFilter;
     wrapperImg.className = 'img-upload__preview effects__preview--' + currentFilter;
 
     sliderPin.classList[currentFilter === 'none' ? 'add' : 'remove']('hidden');
