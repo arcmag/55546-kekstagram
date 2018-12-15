@@ -28,12 +28,12 @@
     effectLevelDepth.style.width = ratePos + '%';
 
     setFilterQuality(ratePos);
-  };
+  }
 
   function mouseUp() {
     document.removeEventListener('mousemove', setPinPosition);
     document.removeEventListener('mouseup', mouseUp);
-  };
+  }
 
   function setFilterQuality(value) {
     var filterValue1 = '';
@@ -53,7 +53,7 @@
       heat: 'brightness(' + (1 + ((value * 2) / 100)) + ')'
     })[imgUploadPreview.dataset['filterEffect']] || '';
 
-  };
+  }
 
   pin.addEventListener('mousedown', function () {
     document.addEventListener('mousemove', setPinPosition);

@@ -82,7 +82,7 @@
       window.clearTimeout(timer);
     }
     timer = window.setTimeout(function () {
-      selectedPhotosList = filteredPhotoList
+      selectedPhotosList = filteredPhotoList;
       removePhotoList();
       outputPhotoList(selectedPhotosList);
     }, DEBOUNCE_INTERVAL);
