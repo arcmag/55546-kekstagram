@@ -74,9 +74,7 @@
 
     uploadFile.value = '';
     textHashtags.value = '';
-
-    textHashtags.style.borderColor = '';
-    commentField.style.borderColor = '';
+    commentField.value = '';
 
     document.removeEventListener('keyup', keydownHiddenEditPictureBlock);
   }
@@ -100,20 +98,18 @@
   // Получаем JSON данные фотографий с свервера
 
   // Валидация данных хештега
-  var uploadSelectImage = document.querySelector('#upload-select-image');
-  var uploadSubmit = document.querySelector('#upload-submit');
-  uploadSubmit.addEventListener('click', function () {
-    var hashList = textHashtags.value.split(' ');
+
+  function checkValidHashtags(text) {
+    var textError = '';
+    var hashList = text.split(' ');
     var hashListCopy = hashList.slice().map(function (elem) {
       return elem.toLowerCase();
     });
 
     if (hashList.length > 5) {
-      textHashtags.setCustomValidity('Максимум 5 hashtag');
-      return;
+      return 'Максимум 5 hashtag';
     }
 
-    var textErrorHash = '';
     for (var i = 0; i < hashList.length; i++) {
       var hash = hashList[i];
 
@@ -122,31 +118,54 @@
       }
 
       if (hash[0] !== '#') {
-        textErrorHash = 'hashtag должны начинаться с символа #';
+        textError = 'hashtag должны начинаться с символа #';
       } else if (hash.length === 1) {
-        textErrorHash = 'hashtag должны быть символы кроме #';
+        textError = 'hashtag должны быть символы кроме #';
       } else if (hash.length > 20) {
-        textErrorHash = 'Максимальная длинная hashtag 20 символов';
+        textError = 'Максимальная длинная hashtag 20 символов';
       } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
-        textErrorHash = 'Одинаковые hashtag недопустимы';
+        textError = 'Одинаковые hashtag недопустимы';
       }
 
-      if (textErrorHash) {
+      if (textError) {
         break;
       }
     }
 
-    var textErrorComment = '';
-    if (commentField.value.length > 140) {
-      textErrorComment = 'Длина комментария не может составлять больше 140 символов';
+    return textError;
+  }
+
+  function checkValidComment(text) {
+    var textError = '';
+    if (text.length > 140) {
+      textError = 'Длина комментария не может составлять больше 140 символов';
     }
 
-    if (textErrorComment) {
-      commentField.setCustomValidity(textErrorComment);
-      commentField.style.border = 'solid 2px red';
-    } else if (textErrorHash) {
-      textHashtags.setCustomValidity(textErrorHash);
-      textHashtags.style.border = 'solid 2px red';
+    return textError;
+  }
+
+  function clearErrorAllFields() {
+    textHashtags.style.borderColor = '';
+    commentField.style.borderColor = '';
+  }
+
+  function declareErrorField(field, textError) {
+    field.setCustomValidity(textError);
+    field.style.border = 'solid 2px red';
+  }
+
+  var uploadSelectImage = document.querySelector('#upload-select-image');
+  var uploadSubmit = document.querySelector('#upload-submit');
+  uploadSubmit.addEventListener('click', function () {
+    clearErrorAllFields();
+
+    var textErrorHashtag = checkValidHashtags(textHashtags.value);
+    var textErrorComment = checkValidComment(commentField.value);
+
+    if (textErrorHashtag) {
+      declareErrorField(textHashtags, textErrorHashtag);
+    } else if (textErrorComment) {
+      declareErrorField(commentField, textErrorComment);
     } else {
       window.backend.save(new FormData(uploadSelectImage), onLoad, onError);
       hiddenEditPictureBlock();

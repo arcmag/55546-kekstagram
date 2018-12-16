@@ -147,11 +147,16 @@
 
   function showBigPicture() {
     bigPicture.classList.remove('hidden');
+    commentsLoader.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+
     document.addEventListener('keyup', keydownHiddenBigPictureEsc);
   }
 
   function hiddenBigPicture() {
     bigPicture.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+
     document.removeEventListener('keyup', keydownHiddenBigPictureEsc);
 
     currentPhoto = null;
