@@ -60,6 +60,10 @@
     document.addEventListener('mouseup', mouseUp);
   });
 
+  function setVisibilitySliderPin(filter) {
+    sliderPin.classList[filter === 'none' || !filter ? 'add' : 'remove']('hidden');
+  }
+
   wrapperPin.addEventListener('mouseup', setPinPosition);
 
   effects.addEventListener('change', function (e) {
@@ -68,8 +72,10 @@
     wrapperImg.dataset.filterEffect = currentFilter;
     wrapperImg.className = 'img-upload__preview effects__preview--' + currentFilter;
 
-    sliderPin.classList[currentFilter === 'none' ? 'add' : 'remove']('hidden');
+    setVisibilitySliderPin(currentFilter);
 
     setPinPosition(false, wrapperPin.getBoundingClientRect().width);
   });
+
+  setVisibilitySliderPin();
 }());
