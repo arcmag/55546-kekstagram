@@ -44,7 +44,7 @@
     imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
   }
 
-  function showEditPictureBlock() {
+  function onShowEditPictureBlock() {
     var file = uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -66,27 +66,27 @@
     setScalePhoto();
 
     imgUploadOverlay.classList.remove('hidden');
-    document.addEventListener('keyup', keydownHiddenEditPictureBlock);
+    document.addEventListener('keyup', onKeydownHiddenEditPictureBlock);
   }
 
-  function hiddenEditPictureBlock() {
+  function onHiddenEditPictureBlock() {
     imgUploadOverlay.classList.add('hidden');
 
     uploadFile.value = '';
     textHashtags.value = '';
     commentField.value = '';
 
-    document.removeEventListener('keyup', keydownHiddenEditPictureBlock);
+    document.removeEventListener('keyup', onKeydownHiddenEditPictureBlock);
   }
 
-  function keydownHiddenEditPictureBlock(evt) {
+  function onKeydownHiddenEditPictureBlock(evt) {
     if (document.activeElement !== textHashtags && document.activeElement !== commentField && evt.keyCode === window.main.ESC_KEYCODE) {
-      hiddenEditPictureBlock();
+      onHiddenEditPictureBlock();
     }
   }
 
-  uploadFile.addEventListener('change', showEditPictureBlock);
-  imgUploadCancel.addEventListener('click', hiddenEditPictureBlock);
+  uploadFile.addEventListener('change', onShowEditPictureBlock);
+  imgUploadCancel.addEventListener('click', onHiddenEditPictureBlock);
 
   function onLoad() {
     window.main.createMessage('Данные успешно загружены на сервер.', 'success');
@@ -100,6 +100,8 @@
   // Валидация данных хештега
 
   function checkValidHashtags(text) {
+    textHashtags.setCustomValidity('');
+
     var textError = '';
     var hashList = text.split(' ');
     var hashListCopy = hashList.slice().map(function (elem) {
@@ -136,6 +138,8 @@
   }
 
   function checkValidComment(text) {
+    commentField.setCustomValidity('');
+
     var textError = '';
     if (text.length > 140) {
       textError = 'Длина комментария не может составлять больше 140 символов';
@@ -168,7 +172,7 @@
       declareErrorField(commentField, textErrorComment);
     } else {
       window.backend.save(new FormData(uploadSelectImage), onLoad, onError);
-      hiddenEditPictureBlock();
+      onHiddenEditPictureBlock();
     }
   });
 
