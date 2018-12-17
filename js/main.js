@@ -12,20 +12,20 @@
     messageBlockTitle.textContent = messageText;
     document.querySelector('main').appendChild(messageBlock);
 
-    function destroyBlock(evt) {
+    function onDestroyBlock(evt) {
       var elem = evt.target;
       if (elem.classList.contains('success') || elem.classList.contains(status + '__button') || evt.keyCode === ESC_KEYCODE) {
-        messageBlockButton.removeEventListener('click', destroyBlock);
-        document.removeEventListener('click', destroyBlock);
-        document.removeEventListener('keyup', destroyBlock);
+        messageBlockButton.removeEventListener('click', onDestroyBlock);
+        document.removeEventListener('click', onDestroyBlock);
+        document.removeEventListener('keyup', onDestroyBlock);
 
         messageBlock.parentElement.removeChild(messageBlock);
       }
     }
 
-    messageBlockButton.addEventListener('click', destroyBlock);
-    document.addEventListener('click', destroyBlock);
-    document.addEventListener('keyup', destroyBlock);
+    messageBlockButton.addEventListener('click', onDestroyBlock);
+    document.addEventListener('click', onDestroyBlock);
+    document.addEventListener('keyup', onDestroyBlock);
   }
 
   function getRandomInt(max, min) {
