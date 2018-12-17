@@ -29,15 +29,14 @@
     var photoContainer = document.createDocumentFragment();
     var photoTmp = document.querySelector('#picture').content;
 
-    for (var i = 0; i < photos.length; i++) {
+    photos.forEach(function (photo, i) {
       var photoNewTmp = photoTmp.querySelector('.picture').cloneNode(true);
-      var photoData = photos[i];
 
       photoNewTmp.dataset.photoIndex = i;
 
-      photoNewTmp.querySelector('.picture__img').src = photoData.url;
-      photoNewTmp.querySelector('.picture__likes').textContent = photoData.likes;
-      photoNewTmp.querySelector('.picture__comments').textContent = photoData.comments.length;
+      photoNewTmp.querySelector('.picture__img').src = photo.url;
+      photoNewTmp.querySelector('.picture__likes').textContent = photo.likes;
+      photoNewTmp.querySelector('.picture__comments').textContent = photo.comments.length;
 
       photoNewTmp.addEventListener('click', function (e) {
         outputPhotoInfo(e.currentTarget.dataset['photoIndex']);
@@ -47,7 +46,7 @@
       photosListHTML.push(photoNewTmp);
 
       photoContainer.appendChild(photoNewTmp);
-    }
+    });
 
     pictures.appendChild(photoContainer);
   }
@@ -155,27 +154,27 @@
     bigPicture.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
-    document.addEventListener('keyup', onKeydownHiddenBigPictureEsc);
+    document.addEventListener('keyup', onBigPictureHiddenEsc);
   }
 
-  function onHiddenBigPicture() {
+  function onBigPictureHidden() {
     bigPicture.classList.add('hidden');
     commentsLoader.classList.remove('hidden');
     document.body.classList.remove('modal-open');
 
-    document.removeEventListener('keyup', onKeydownHiddenBigPictureEsc);
+    document.removeEventListener('keyup', onBigPictureHiddenEsc);
 
     currentPhoto = null;
     showComments = 5;
   }
 
-  function onKeydownHiddenBigPictureEsc(evt) {
+  function onBigPictureHiddenEsc(evt) {
     if (evt.keyCode === window.main.ESC_KEYCODE) {
-      onHiddenBigPicture();
+      onBigPictureHidden();
     }
   }
 
-  bigPictureCancel.addEventListener('click', onHiddenBigPicture);
+  bigPictureCancel.addEventListener('click', onBigPictureHidden);
 
   function onLoad(data) {
     photosList = selectedPhotosList = data;

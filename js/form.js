@@ -3,6 +3,10 @@
 (function () {
   // контроль над окном редактирования фотографии
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var MAX_SCALE_IMG = 100;
+  var MIN_SCALE_IMG = 25;
+  var MAX_COMMENT_LENGTH = 140;
+  var OFFSET_SCALE_IMAGE_STEP = 25;
 
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var editImg = imgUploadPreview.querySelector('img');
@@ -19,32 +23,32 @@
   var btnScaleDec = document.querySelector('.scale__control--smaller');
   var scaleImage = 100;
 
-  btnScaleInc.addEventListener('click', setScalePhoto);
-  btnScaleDec.addEventListener('click', setScalePhoto);
+  btnScaleInc.addEventListener('click', onPhotoSetScale);
+  btnScaleDec.addEventListener('click', onPhotoSetScale);
 
-  function setScalePhoto(e) {
+  function onPhotoSetScale(e) {
     var elem = e ? e.currentTarget : -1;
-    var offsetSteep = 25;
 
     if (elem !== -1) {
       if (elem.classList.contains('scale__control--smaller')) {
-        scaleImage -= offsetSteep;
+        scaleImage -= OFFSET_SCALE_IMAGE_STEP;
       } else if (elem.classList.contains('scale__control--bigger')) {
-        scaleImage += offsetSteep;
+        scaleImage += OFFSET_SCALE_IMAGE_STEP;
       }
     }
 
-    if (scaleImage > 100) {
-      scaleImage = 100;
-    } else if (scaleImage < 25) {
-      scaleImage = 25;
+    if (scaleImage > MAX_SCALE_IMG) {
+      scaleImage = MAX_SCALE_IMG;
+    } else if (scaleImage < MIN_SCALE_IMG) {
+      scaleImage = MIN_SCALE_IMG;
     }
 
     scaleControlValue.value = scaleImage + '%';
     imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
   }
 
-  function onShowEditPictureBlock() {
+  // on + (элемент - блок редактирования фотографии) EditPictureBloc + (действие - показать) Show
+  function onEditPictureBlockShow() {
     var file = uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -63,30 +67,30 @@
     }
 
     scaleImage = 100;
-    setScalePhoto();
+    onPhotoSetScale();
 
     imgUploadOverlay.classList.remove('hidden');
-    document.addEventListener('keyup', onKeydownHiddenEditPictureBlock);
+    document.addEventListener('keyup', onEditPictureBlockHiddenEsc);
   }
 
-  function onHiddenEditPictureBlock() {
+  function onEditPictureBlockHidden() {
     imgUploadOverlay.classList.add('hidden');
 
     uploadFile.value = '';
     textHashtags.value = '';
     commentField.value = '';
 
-    document.removeEventListener('keyup', onKeydownHiddenEditPictureBlock);
+    document.removeEventListener('keyup', onEditPictureBlockHiddenEsc);
   }
 
-  function onKeydownHiddenEditPictureBlock(evt) {
+  function onEditPictureBlockHiddenEsc(evt) {
     if (document.activeElement !== textHashtags && document.activeElement !== commentField && evt.keyCode === window.main.ESC_KEYCODE) {
-      onHiddenEditPictureBlock();
+      onEditPictureBlockHidden();
     }
   }
 
-  uploadFile.addEventListener('change', onShowEditPictureBlock);
-  imgUploadCancel.addEventListener('click', onHiddenEditPictureBlock);
+  uploadFile.addEventListener('change', onEditPictureBlockShow);
+  imgUploadCancel.addEventListener('click', onEditPictureBlockHidden);
 
   function onLoad() {
     window.main.createMessage('Данные успешно загружены на сервер.', 'success');
@@ -98,27 +102,24 @@
   // Получаем JSON данные фотографий с свервера
 
   // Валидация данных хештега
-
   function checkValidHashtags(text) {
     textHashtags.setCustomValidity('');
 
     var textError = '';
-    var hashList = text.split(' ');
+    var hashList = text.trim().split(' ');
     var hashListCopy = hashList.slice().map(function (elem) {
       return elem.toLowerCase();
     });
+
+    if (!hashList[0] && hashList.length === 1) {
+      return '';
+    }
 
     if (hashList.length > 5) {
       return 'Максимум 5 hashtag';
     }
 
-    for (var i = 0; i < hashList.length; i++) {
-      var hash = hashList[i];
-
-      if (!hash && hashList.length === 1) {
-        break;
-      }
-
+    hashList.forEach(function (hash, i) {
       if (hash[0] !== '#') {
         textError = 'hashtag должны начинаться с символа #';
       } else if (hash.length === 1) {
@@ -128,11 +129,7 @@
       } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
         textError = 'Одинаковые hashtag недопустимы';
       }
-
-      if (textError) {
-        break;
-      }
-    }
+    });
 
     return textError;
   }
@@ -140,8 +137,10 @@
   function checkValidComment(text) {
     commentField.setCustomValidity('');
 
+    text = text.trim();
+
     var textError = '';
-    if (text.length > 140) {
+    if (text.length > MAX_COMMENT_LENGTH) {
       textError = 'Длина комментария не может составлять больше 140 символов';
     }
 
@@ -172,7 +171,7 @@
       declareErrorField(commentField, textErrorComment);
     } else {
       window.backend.save(new FormData(uploadSelectImage), onLoad, onError);
-      onHiddenEditPictureBlock();
+      onEditPictureBlockHidden();
     }
   });
 

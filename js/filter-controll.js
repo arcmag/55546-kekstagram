@@ -12,7 +12,7 @@
   var effects = document.querySelector('.effects');
   var wrapperImg = window.main.imgUploadPreview;
 
-  function onSetPinPosition(evt, value) {
+  function onPinSetPosition(evt, value) {
     dataSizeWrapperPin = wrapperPin.getBoundingClientRect();
     var pinPos = typeof value === 'number' ? value : evt.clientX - dataSizeWrapperPin.left;
 
@@ -31,7 +31,7 @@
   }
 
   function onMouseUp() {
-    document.removeEventListener('mousemove', onSetPinPosition);
+    document.removeEventListener('mousemove', onPinSetPosition);
     document.removeEventListener('mouseup', onMouseUp);
   }
 
@@ -56,7 +56,7 @@
   }
 
   pin.addEventListener('mousedown', function () {
-    document.addEventListener('mousemove', onSetPinPosition);
+    document.addEventListener('mousemove', onPinSetPosition);
     document.addEventListener('mouseup', onMouseUp);
   });
 
@@ -64,7 +64,7 @@
     sliderPin.classList[filter === 'none' || !filter ? 'add' : 'remove']('hidden');
   }
 
-  wrapperPin.addEventListener('mouseup', onSetPinPosition);
+  wrapperPin.addEventListener('mouseup', onPinSetPosition);
 
   effects.addEventListener('change', function (e) {
     var currentFilter = e.target.value;
@@ -74,7 +74,7 @@
 
     setVisibilitySliderPin(currentFilter);
 
-    onSetPinPosition(false, wrapperPin.getBoundingClientRect().width);
+    onPinSetPosition(false, wrapperPin.getBoundingClientRect().width);
   });
 
   setVisibilitySliderPin();
