@@ -27,10 +27,14 @@
   var btnScaleDec = document.querySelector('.scale__control--smaller');
   var scaleImage = MAX_SCALE_IMG;
 
-  btnScaleInc.addEventListener('click', onButtonSetScale);
-  btnScaleDec.addEventListener('click', onButtonSetScale);
+  btnScaleInc.addEventListener('click', onButtonScaleClick);
+  btnScaleDec.addEventListener('click', onButtonScaleClick);
 
-  function onButtonSetScale(e) {
+  function onButtonScaleClick(e) {
+    buttonSetScale(e);
+  }
+
+  function buttonSetScale(e) {
     var elem = e ? e.currentTarget : -1;
 
     if (elem !== -1) {
@@ -51,7 +55,7 @@
     imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
   }
 
-  function onFileInputPictureShow() {
+  function onFileInputPictureShowChange() {
     var file = uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -70,30 +74,35 @@
     }
 
     scaleImage = MAX_SCALE_IMG;
-    onButtonSetScale();
+    buttonSetScale();
 
     imgUploadOverlay.classList.remove('hidden');
-    document.addEventListener('keyup', onEscPictureHidden);
+    document.addEventListener('keyup', onFileInputPictureHiddenKeyup);
+    imgUploadCancel.addEventListener('click', onFileInputPictureHiddenClick);
   }
 
-  function onFileInputPictureHidden() {
+  function fileInputPictureHidden() {
     imgUploadOverlay.classList.add('hidden');
 
     uploadFile.value = '';
     textHashtags.value = '';
     commentField.value = '';
 
-    document.removeEventListener('keyup', onEscPictureHidden);
+    document.removeEventListener('keyup', onFileInputPictureHiddenKeyup);
+    imgUploadCancel.removeEventListener('click', onFileInputPictureHiddenClick);
   }
 
-  function onEscPictureHidden(evt) {
+  function onFileInputPictureHiddenKeyup(evt) {
     if (document.activeElement !== textHashtags && document.activeElement !== commentField && evt.keyCode === window.main.ESC_KEYCODE) {
-      onFileInputPictureHidden();
+      fileInputPictureHidden();
     }
   }
 
-  uploadFile.addEventListener('change', onFileInputPictureShow);
-  imgUploadCancel.addEventListener('click', onFileInputPictureHidden);
+  function onFileInputPictureHiddenClick() {
+    fileInputPictureHidden();
+  }
+
+  uploadFile.addEventListener('change', onFileInputPictureShowChange);
 
   function onLoad() {
     window.main.createMessage('Данные успешно загружены на сервер.', 'success');

@@ -12,7 +12,7 @@
   var effects = document.querySelector('.effects');
   var wrapperImg = window.main.imgUploadPreview;
 
-  function onPinSetPosition(evt, value) {
+  function setPinPosition(evt, value) {
     dataSizeWrapperPin = wrapperPin.getBoundingClientRect();
     var pinPos = typeof value === 'number' ? value : evt.clientX - dataSizeWrapperPin.left;
 
@@ -30,9 +30,17 @@
     setFilterQuality(ratePos);
   }
 
-  function onMouseUp() {
-    document.removeEventListener('mousemove', onPinSetPosition);
-    document.removeEventListener('mouseup', onMouseUp);
+  function onPinPositionChange() {
+    setPinPosition(false, wrapperPin.getBoundingClientRect().width);
+  }
+
+  function onPinPositionMouseMove(e) {
+    setPinPosition(e);
+  }
+
+  function onPinMouseUp() {
+    document.removeEventListener('mousemove', onPinPositionMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
   }
 
   function setFilterQuality(value) {
@@ -52,19 +60,18 @@
       phobos: 'blur(' + ((value * 3) / 100) + 'px)',
       heat: 'brightness(' + (1 + ((value * 2) / 100)) + ')'
     })[imgUploadPreview.dataset['filterEffect']] || '';
-
   }
 
   pin.addEventListener('mousedown', function () {
-    document.addEventListener('mousemove', onPinSetPosition);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', onPinPositionMouseMove);
+    document.addEventListener('mouseup', onPinMouseUp);
   });
 
   function setVisibilitySliderPin(filter) {
     sliderPin.classList[filter === 'none' || !filter ? 'add' : 'remove']('hidden');
   }
 
-  wrapperPin.addEventListener('mouseup', onPinSetPosition);
+  wrapperPin.addEventListener('mouseup', onPinPositionMouseMove);
 
   effects.addEventListener('change', function (e) {
     var currentFilter = e.target.value;
@@ -74,7 +81,7 @@
 
     setVisibilitySliderPin(currentFilter);
 
-    onPinSetPosition(false, wrapperPin.getBoundingClientRect().width);
+    onPinPositionChange();
   });
 
   setVisibilitySliderPin();

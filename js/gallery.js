@@ -21,9 +21,9 @@
   var filterNewBtn = imgFilters.querySelector('#filter-new');
   var filterDiscussedBtn = imgFilters.querySelector('#filter-discussed');
 
-  filterPopularBtn.addEventListener('click', onButtonFilterPhoto);
-  filterNewBtn.addEventListener('click', onButtonFilterPhoto);
-  filterDiscussedBtn.addEventListener('click', onButtonFilterPhoto);
+  filterPopularBtn.addEventListener('click', onButtonFilterClick);
+  filterNewBtn.addEventListener('click', onButtonFilterClick);
+  filterDiscussedBtn.addEventListener('click', onButtonFilterClick);
 
   function outputPhotoList(photos) {
     var photoContainer = document.createDocumentFragment();
@@ -60,7 +60,7 @@
   }
 
   var timer = null;
-  function onButtonFilterPhoto(evt) {
+  function onButtonFilterClick(evt) {
     var elem = evt.currentTarget;
     var selectedFilter = elem.id;
 
@@ -154,27 +154,31 @@
     bigPicture.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
-    document.addEventListener('keyup', onBigPictureHiddenEsc);
+    document.addEventListener('keyup', onBigPictureHiddenKeyup);
   }
 
-  function onBigPictureHidden() {
+  function hiddenBigPicture() {
     bigPicture.classList.add('hidden');
     commentsLoader.classList.remove('hidden');
     document.body.classList.remove('modal-open');
 
-    document.removeEventListener('keyup', onBigPictureHiddenEsc);
+    document.removeEventListener('keyup', onBigPictureHiddenKeyup);
 
     currentPhoto = null;
     showComments = 5;
   }
 
-  function onBigPictureHiddenEsc(evt) {
+  function onBigPictureHiddenKeyup(evt) {
     if (evt.keyCode === window.main.ESC_KEYCODE) {
-      onBigPictureHidden();
+      hiddenBigPicture();
     }
   }
 
-  bigPictureCancel.addEventListener('click', onBigPictureHidden);
+  function onBigPictureHiddenClick() {
+    hiddenBigPicture();
+  }
+
+  bigPictureCancel.addEventListener('click', onBigPictureHiddenClick);
 
   function onLoad(data) {
     photosList = selectedPhotosList = data;

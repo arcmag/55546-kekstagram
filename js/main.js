@@ -14,8 +14,8 @@
 
     function destroyMessageBlock() {
       messageBlockButton.removeEventListener('click', onMessageBlockClick);
-      document.removeEventListener('click', onMessageBlockClick);
-      document.removeEventListener('keyup', onMessageBlockKeyup);
+      document.removeEventListener('click', onDocumentClick);
+      document.removeEventListener('keyup', onDocumentKeyup);
 
       messageBlock.parentElement.removeChild(messageBlock);
     }
@@ -23,20 +23,28 @@
     function onMessageBlockClick(evt) {
       var elem = evt.target;
 
-      if (elem.classList.contains('error') || elem.classList.contains('success') || elem.classList.contains(status + '__button')) {
+      if (elem.classList.contains(status + '__button')) {
         destroyMessageBlock();
       }
     }
 
-    function onMessageBlockKeyup(evt) {
+    function onDocumentClick(evt) {
+      var elem = evt.target;
+
+      if (elem.classList.contains('error') || elem.classList.contains('success')) {
+        destroyMessageBlock();
+      }
+    }
+
+    function onDocumentKeyup(evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         destroyMessageBlock();
       }
     }
 
     messageBlockButton.addEventListener('click', onMessageBlockClick);
-    document.addEventListener('click', onMessageBlockClick);
-    document.addEventListener('keyup', onMessageBlockKeyup);
+    document.addEventListener('click', onDocumentClick);
+    document.addEventListener('keyup', onDocumentKeyup);
   }
 
   function getRandomInt(max, min) {
