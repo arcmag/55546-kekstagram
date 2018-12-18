@@ -189,7 +189,7 @@
       declareErrorField(commentField, textErrorComment);
     } else {
       window.backend.save(new FormData(uploadSelectImage), onLoad, onError);
-      onFileInputPictureHidden();
+      fileInputPictureHidden();
     }
   });
 
