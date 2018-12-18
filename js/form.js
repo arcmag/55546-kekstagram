@@ -108,15 +108,15 @@
   function checkValidHashtags(text) {
     textHashtags.setCustomValidity('');
 
+    if (text.trim() === '') {
+      return '';
+    }
+
     var textError = '';
     var hashList = text.trim().split(' ');
     var hashListCopy = hashList.slice().map(function (elem) {
       return elem.toLowerCase();
     });
-
-    if (!hashList[0] && hashList.length === 1) {
-      return '';
-    }
 
     if (hashList.length > MAX_HASH_LIST_LENGTH) {
       return 'Максимум 5 hashtag';
