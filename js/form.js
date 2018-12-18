@@ -52,7 +52,7 @@
     }
 
     scaleControlValue.value = scaleImage + '%';
-    imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
+    imgUploadPreview.style.transform = 'scale(' + (scaleImage < MAX_SCALE_IMG ? '0.' + scaleImage : 1) + ')';
   }
 
   function onFileInputPictureShowChange() {
