@@ -4,7 +4,6 @@
   // контроль над окном редактирования фотографии
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var MAX_SCALE_IMG = 100;
   var MIN_SCALE_IMG = 25;
   var OFFSET_SCALE_IMAGE_STEP = 25;
   var MAX_SCALE_IMG = 100;
