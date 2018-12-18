@@ -21,9 +21,9 @@
   var filterNewBtn = imgFilters.querySelector('#filter-new');
   var filterDiscussedBtn = imgFilters.querySelector('#filter-discussed');
 
-  filterPopularBtn.addEventListener('click', onSetCurrentCategoryPhoto);
-  filterNewBtn.addEventListener('click', onSetCurrentCategoryPhoto);
-  filterDiscussedBtn.addEventListener('click', onSetCurrentCategoryPhoto);
+  filterPopularBtn.addEventListener('click', onButtonFilterPhoto);
+  filterNewBtn.addEventListener('click', onButtonFilterPhoto);
+  filterDiscussedBtn.addEventListener('click', onButtonFilterPhoto);
 
   function outputPhotoList(photos) {
     var photoContainer = document.createDocumentFragment();
@@ -60,7 +60,7 @@
   }
 
   var timer = null;
-  function onSetCurrentCategoryPhoto(evt) {
+  function onButtonFilterPhoto(evt) {
     var elem = evt.currentTarget;
     var selectedFilter = elem.id;
 

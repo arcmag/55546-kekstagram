@@ -3,10 +3,15 @@
 (function () {
   // контроль над окном редактирования фотографии
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var MAX_SCALE_IMG = 100;
   var MIN_SCALE_IMG = 25;
-  var MAX_COMMENT_LENGTH = 140;
   var OFFSET_SCALE_IMAGE_STEP = 25;
+  var MAX_SCALE_IMG = 100;
+
+  var MAX_COMMENT_LENGTH = 140;
+  var MAX_HASH_LIST_LENGTH = 5;
+  var MAX_HASHTAG_LENGTH = 20;
 
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   var editImg = imgUploadPreview.querySelector('img');
@@ -21,12 +26,12 @@
   var scaleControlValue = document.querySelector('.scale__control--value');
   var btnScaleInc = document.querySelector('.scale__control--bigger');
   var btnScaleDec = document.querySelector('.scale__control--smaller');
-  var scaleImage = 100;
+  var scaleImage = MAX_SCALE_IMG;
 
-  btnScaleInc.addEventListener('click', onPhotoSetScale);
-  btnScaleDec.addEventListener('click', onPhotoSetScale);
+  btnScaleInc.addEventListener('click', onButtonSetScale);
+  btnScaleDec.addEventListener('click', onButtonSetScale);
 
-  function onPhotoSetScale(e) {
+  function onButtonSetScale(e) {
     var elem = e ? e.currentTarget : -1;
 
     if (elem !== -1) {
@@ -47,8 +52,7 @@
     imgUploadPreview.style.transform = 'scale(' + (scaleImage < 100 ? '0.' + scaleImage : 1) + ')';
   }
 
-  // on + (элемент - блок редактирования фотографии) EditPictureBloc + (действие - показать) Show
-  function onEditPictureBlockShow() {
+  function onFileInputPictureShow() {
     var file = uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -66,31 +70,31 @@
       reader.readAsDataURL(file);
     }
 
-    scaleImage = 100;
-    onPhotoSetScale();
+    scaleImage = MAX_SCALE_IMG;
+    onButtonSetScale();
 
     imgUploadOverlay.classList.remove('hidden');
-    document.addEventListener('keyup', onEditPictureBlockHiddenEsc);
+    document.addEventListener('keyup', onEscPictureHidden);
   }
 
-  function onEditPictureBlockHidden() {
+  function onFileInputPictureHidden() {
     imgUploadOverlay.classList.add('hidden');
 
     uploadFile.value = '';
     textHashtags.value = '';
     commentField.value = '';
 
-    document.removeEventListener('keyup', onEditPictureBlockHiddenEsc);
+    document.removeEventListener('keyup', onEscPictureHidden);
   }
 
-  function onEditPictureBlockHiddenEsc(evt) {
+  function onEscPictureHidden(evt) {
     if (document.activeElement !== textHashtags && document.activeElement !== commentField && evt.keyCode === window.main.ESC_KEYCODE) {
-      onEditPictureBlockHidden();
+      onFileInputPictureHidden();
     }
   }
 
-  uploadFile.addEventListener('change', onEditPictureBlockShow);
-  imgUploadCancel.addEventListener('click', onEditPictureBlockHidden);
+  uploadFile.addEventListener('change', onFileInputPictureShow);
+  imgUploadCancel.addEventListener('click', onFileInputPictureHidden);
 
   function onLoad() {
     window.main.createMessage('Данные успешно загружены на сервер.', 'success');
@@ -115,21 +119,27 @@
       return '';
     }
 
-    if (hashList.length > 5) {
+    if (hashList.length > MAX_HASH_LIST_LENGTH) {
       return 'Максимум 5 hashtag';
     }
 
-    hashList.forEach(function (hash, i) {
+    for (var i = 0; i < hashList.length; i++) {
+      var hash = hashList[i];
+
       if (hash[0] !== '#') {
         textError = 'hashtag должны начинаться с символа #';
       } else if (hash.length === 1) {
         textError = 'hashtag должны быть символы кроме #';
-      } else if (hash.length > 20) {
+      } else if (hash.length > MAX_HASHTAG_LENGTH) {
         textError = 'Максимальная длинная hashtag 20 символов';
       } else if (hashListCopy.indexOf(hash.toLowerCase(), i + 1) !== -1) {
         textError = 'Одинаковые hashtag недопустимы';
       }
-    });
+
+      if (textError) {
+        break;
+      }
+    }
 
     return textError;
   }
@@ -171,7 +181,7 @@
       declareErrorField(commentField, textErrorComment);
     } else {
       window.backend.save(new FormData(uploadSelectImage), onLoad, onError);
-      onEditPictureBlockHidden();
+      onFileInputPictureHidden();
     }
   });
 

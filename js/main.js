@@ -12,20 +12,31 @@
     messageBlockTitle.textContent = messageText;
     document.querySelector('main').appendChild(messageBlock);
 
-    function onMessageBlockDestroy(evt) {
-      var elem = evt.target;
-      if (elem.classList.contains('success') || elem.classList.contains(status + '__button') || evt.keyCode === ESC_KEYCODE) {
-        messageBlockButton.removeEventListener('click', onMessageBlockDestroy);
-        document.removeEventListener('click', onMessageBlockDestroy);
-        document.removeEventListener('keyup', onMessageBlockDestroy);
+    function destroyMessageBlock() {
+      messageBlockButton.removeEventListener('click', onMessageBlockClick);
+      document.removeEventListener('click', onMessageBlockClick);
+      document.removeEventListener('keyup', onMessageBlockKeyup);
 
-        messageBlock.parentElement.removeChild(messageBlock);
+      messageBlock.parentElement.removeChild(messageBlock);
+    }
+
+    function onMessageBlockClick(evt) {
+      var elem = evt.target;
+
+      if (elem.classList.contains('error') || elem.classList.contains('success') || elem.classList.contains(status + '__button')) {
+        destroyMessageBlock();
       }
     }
 
-    messageBlockButton.addEventListener('click', onMessageBlockDestroy);
-    document.addEventListener('click', onMessageBlockDestroy);
-    document.addEventListener('keyup', onMessageBlockDestroy);
+    function onMessageBlockKeyup(evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        destroyMessageBlock();
+      }
+    }
+
+    messageBlockButton.addEventListener('click', onMessageBlockClick);
+    document.addEventListener('click', onMessageBlockClick);
+    document.addEventListener('keyup', onMessageBlockKeyup);
   }
 
   function getRandomInt(max, min) {
